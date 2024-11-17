@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
+const mongoose = require('mongoose');
 
 // Initialize Express app
 const app = express();
@@ -14,22 +15,39 @@ app.use(bodyParser.json()); // Parse incoming JSON requests
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'hariharan.2211024@srec.ac.in', // Replace with your email
-    pass: 'Hari@5295', // Use your Gmail app password
+    user: 'hariharan5295@gmail.com', // Replace with your email
+    pass: 'jlio yygs xggr nqpk', // Use your Gmail app password
   },
 });
 
-// Smoke level data storage (consider replacing with a database for production)
-let smokeData = [];
+// MongoDB URI (replace <db_password> with your actual password)
+const mongoURI = 'mongodb+srv://hariharan5295:hari123@cluster0.kacxfek.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
-// Threshold for sending an email alert
+// Connect to MongoDB using Mongoose
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('MongoDB connected!');
+  })
+  .catch((err) => {
+    console.error('MongoDB connection error:', err);
+  });
+
+// Define a Mongoose schema for storing smoke level data
+const smokeSchema = new mongoose.Schema({
+  smoke_level: Number,
+  timestamp: { type: Date, default: Date.now },
+});
+
+const Smoke = mongoose.model('Smoke', smokeSchema);
+
+// Smoke level data storage (will be handled by MongoDB)
 const SMOKE_THRESHOLD = 20; // Replace with your desired threshold
 
 // Function to send email alert
 const sendEmailAlert = async (smokeLevel) => {
   const mailOptions = {
-    from: 'hariharan.2211024@srec.ac.in', // Sender email
-    to: 'hariharan5295@gmail.com', // Recipient email
+    from: 'hariharan5295@gmail.com', // Sender email
+    to: 'hariharan.2211024@srec.ac.in', // Recipient email
     subject: 'Smoke Alert - High Level Detected!',
     text: `Warning! High smoke level detected: ${smokeLevel}. Immediate action is required.`,
   };
@@ -42,11 +60,6 @@ const sendEmailAlert = async (smokeLevel) => {
   }
 };
 
-// Root route for health check or info
-app.get('/', (req, res) => {
-  res.status(200).send('Smoke Detection API is running! Use POST /smoke_level or GET /get_smoke_data');
-});
-
 // Route to handle smoke level data
 app.post('/smoke_level', async (req, res) => {
   try {
@@ -57,7 +70,10 @@ app.post('/smoke_level', async (req, res) => {
     }
 
     console.log(`Received smoke level: ${smoke_level}`);
-    smokeData.push(smoke_level);
+
+    // Insert smoke level data into MongoDB using Mongoose
+    const smokeData = new Smoke({ smoke_level });
+    await smokeData.save();
 
     // Trigger email alert if smoke level exceeds the threshold
     if (smoke_level > SMOKE_THRESHOLD) {
@@ -72,17 +88,18 @@ app.post('/smoke_level', async (req, res) => {
 });
 
 // Route to get smoke level data
-app.get('/get_smoke_data', (req, res) => {
-  res.json(smokeData);
-});
-
-// Catch-all route for invalid GET requests to /smoke_level
-app.get('/smoke_level', (req, res) => {
-  res.status(200).send('This endpoint accepts POST requests only. Use a tool like Postman or curl to send data.');
+app.get('/get_smoke_data', async (req, res) => {
+  try {
+    const smokeData = await Smoke.find();
+    res.json(smokeData);
+  } catch (error) {
+    console.error('Error fetching smoke data:', error);
+    res.status(500).json({ error: 'Error fetching data' });
+  }
 });
 
 // Start the server
-const PORT = process.env.PORT || 8080; // Use environment variable for port in production
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
