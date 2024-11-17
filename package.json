@@ -1,15 +1,21 @@
 {
   "name": "smoke-monitor-api",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "An API for monitoring smoke levels and sending email alerts.",
+  "main": "server.js", // Change to "index.js" if needed
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "npm list --depth=0 && node server.js"
   },
-  "keywords": [],
+  "keywords": [
+    "smoke-monitor",
+    "API",
+    "mongoose",
+    "nodemailer"
+  ],
   "author": "Hari",
   "license": "ISC",
-  "description": "An API for monitoring smoke levels and sending email alerts.",
   "dependencies": {
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
@@ -17,5 +23,10 @@
     "mongodb": "^6.10.0",
     "mongoose": "^8.8.1",
     "nodemailer": "^6.9.16"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   }
 }
