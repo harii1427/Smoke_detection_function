@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
 let smokeData = [];
 
 // Threshold for sending an email alert
-const SMOKE_THRESHOLD = 400; // Replace with your desired threshold
+const SMOKE_THRESHOLD = 20; // Replace with your desired threshold
 
 // Function to send email alert
 const sendEmailAlert = async (smokeLevel) => {
