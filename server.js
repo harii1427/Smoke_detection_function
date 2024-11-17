@@ -42,6 +42,11 @@ const sendEmailAlert = async (smokeLevel) => {
   }
 };
 
+// Route for the root URL
+app.get('/', (req, res) => {
+  res.send('Welcome to the Smoke Detection API! Available routes: /smoke_level (POST), /get_smoke_data (GET)');
+});
+
 // Route to handle smoke level data
 app.post('/smoke_level', async (req, res) => {
   try {
@@ -72,7 +77,7 @@ app.get('/get_smoke_data', (req, res) => {
 });
 
 // Start the server
-const PORT = 5000;
+const PORT = process.env.PORT || 5000; // Use PORT from environment variable or default to 5000
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
