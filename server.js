@@ -14,8 +14,8 @@ app.use(bodyParser.json()); // Parse incoming JSON requests
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'hariharan.2211024@srec.ac.in', // Replace with your email
-    pass: 'Hari@5295', // Use your Gmail app password
+    user: process.env.EMAIL_USER, // Use environment variable for email
+    pass: process.env.EMAIL_PASS, // Use environment variable for password
   },
 });
 
@@ -23,12 +23,12 @@ const transporter = nodemailer.createTransport({
 let smokeData = [];
 
 // Threshold for sending an email alert
-const SMOKE_THRESHOLD = 400; // Replace with your desired threshold
+const SMOKE_THRESHOLD = 20; // Replace with your desired threshold
 
 // Function to send email alert
 const sendEmailAlert = async (smokeLevel) => {
   const mailOptions = {
-    from: 'hariharan.2211024@srec.ac.in', // Sender email
+    from: process.env.EMAIL_USER, // Sender email
     to: 'hariharan5295@gmail.com', // Recipient email
     subject: 'Smoke Alert - High Level Detected!',
     text: `Warning! High smoke level detected: ${smokeLevel}. Immediate action is required.`,
@@ -42,9 +42,9 @@ const sendEmailAlert = async (smokeLevel) => {
   }
 };
 
-// Route for the root URL
+// Root route for verifying deployment
 app.get('/', (req, res) => {
-  res.send('Welcome to the Smoke Detection API! Available routes: /smoke_level (POST), /get_smoke_data (GET)');
+  res.send('Smoke Detection API is running!');
 });
 
 // Route to handle smoke level data
@@ -77,7 +77,7 @@ app.get('/get_smoke_data', (req, res) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 5000; // Use PORT from environment variable or default to 5000
+const PORT = process.env.PORT || 5000; // Use the PORT environment variable
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
