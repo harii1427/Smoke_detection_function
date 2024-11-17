@@ -14,8 +14,8 @@ app.use(bodyParser.json()); // Parse incoming JSON requests
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER, // Use environment variable for email
-    pass: process.env.EMAIL_PASS, // Use environment variable for password
+    user: 'hariharan.2211024@srec.ac.in', // Replace with your email
+    pass: 'Hari@5295', // Use your Gmail app password
   },
 });
 
@@ -23,12 +23,12 @@ const transporter = nodemailer.createTransport({
 let smokeData = [];
 
 // Threshold for sending an email alert
-const SMOKE_THRESHOLD = 20; // Replace with your desired threshold
+const SMOKE_THRESHOLD = 400; // Replace with your desired threshold
 
 // Function to send email alert
 const sendEmailAlert = async (smokeLevel) => {
   const mailOptions = {
-    from: process.env.EMAIL_USER, // Sender email
+    from: 'hariharan.2211024@srec.ac.in', // Sender email
     to: 'hariharan5295@gmail.com', // Recipient email
     subject: 'Smoke Alert - High Level Detected!',
     text: `Warning! High smoke level detected: ${smokeLevel}. Immediate action is required.`,
@@ -42,9 +42,9 @@ const sendEmailAlert = async (smokeLevel) => {
   }
 };
 
-// Root route for verifying deployment
+// Root route for health check or info
 app.get('/', (req, res) => {
-  res.send('Smoke Detection API is running!');
+  res.status(200).send('Smoke Detection API is running! Use POST /smoke_level or GET /get_smoke_data');
 });
 
 // Route to handle smoke level data
@@ -76,8 +76,13 @@ app.get('/get_smoke_data', (req, res) => {
   res.json(smokeData);
 });
 
+// Catch-all route for invalid GET requests to /smoke_level
+app.get('/smoke_level', (req, res) => {
+  res.status(200).send('This endpoint accepts POST requests only. Use a tool like Postman or curl to send data.');
+});
+
 // Start the server
-const PORT = process.env.PORT || 5000; // Use the PORT environment variable
+const PORT = process.env.PORT || 8080; // Use environment variable for port in production
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
