@@ -2,7 +2,7 @@
   "name": "smoke-monitor-api",
   "version": "1.0.0",
   "description": "An API for monitoring smoke levels and sending email alerts.",
-  "main": "server.js", // Change to "index.js" if needed
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
