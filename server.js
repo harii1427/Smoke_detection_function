@@ -15,8 +15,8 @@ app.use(bodyParser.json()); // Parse incoming JSON requests
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'hariharan5295@gmail.com', // Replace with your email
-    pass: 'jlio yygs xggr nqpk', // Use your Gmail app password
+    user: 'smokedetection4@gmail.com', // Replace with your email
+    pass: 'egsk zbna fwgy wrdn', // Use your Gmail app password
   },
 });
 
@@ -46,8 +46,8 @@ const SMOKE_THRESHOLD = 20; // Replace with your desired threshold
 // Function to send email alert
 const sendEmailAlert = async (smokeLevel) => {
   const mailOptions = {
-    from: 'hariharan5295@gmail.com', // Sender email
-    to: 'hariharan.2211024@srec.ac.in', // Recipient email
+    from: 'smokedetection4@gmail.com', // Sender email
+    to: 'sec22me002@sairamtap.edu.in', // Recipient email
     subject: 'Smoke Alert - High Level Detected!',
     text: `Warning! High smoke level detected: ${smokeLevel}. Immediate action is required.`,
   };
