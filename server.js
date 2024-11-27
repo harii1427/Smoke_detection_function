@@ -41,7 +41,7 @@ const smokeSchema = new mongoose.Schema({
 const Smoke = mongoose.model('Smoke', smokeSchema);
 
 // Smoke level data storage (will be handled by MongoDB)
-const SMOKE_THRESHOLD = 20; // Replace with your desired threshold
+const SMOKE_THRESHOLD = 10; // Replace with your desired threshold
 
 // Function to send email alert
 const sendEmailAlert = async (smokeLevel) => {
